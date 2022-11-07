@@ -5,7 +5,7 @@ import time
 
 
 driver = webdriver.Firefox()
-driver.get("https://store.steampowered.com/search/?category1=998&filter=topsellers")
+driver.get("https://store.steampowered.com/search?category1=998")
 
 def skrol(browser: webdriver.Firefox, kolikokrat: int):
     body = browser.find_element(By.TAG_NAME, "body")
