@@ -9,8 +9,9 @@ driver.get("https://store.steampowered.com/search?category1=998")
 
 def skrol(browser: webdriver.Firefox, kolikokrat: int):
     body = browser.find_element(By.TAG_NAME, "body")
-    for _ in range(kolikokrat):
+    for i in range(kolikokrat):
         body.send_keys(Keys.PAGE_DOWN)
+        print(i)
         time.sleep(0.2)
 
 def skopiraj_html(browser: webdriver.Firefox, kolikokrat: int):
@@ -23,4 +24,4 @@ def shrani_vsebino(browser: webdriver.Firefox, kolikokrat: int, datoteka: str):
     with open(datoteka, 'w', encoding='UTF-8') as dat:
         dat.write(html)
 
-shrani_vsebino(driver, 7900, 'html.txt')
+shrani_vsebino(driver, 2500, 'html.txt')
