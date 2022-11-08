@@ -2,6 +2,7 @@ import orodja
 import re
 # temp
 import requests as req
+import json
 
 url_sample = re.compile(
     r'<a href="(https:\/\/store\.steampowered\.com\/app\/.*?\/)\?snr=1_7_7',
@@ -56,13 +57,26 @@ def str_to_date(str: str):
     list[1] = months[m]
     return '.'.join(list)
 
+out = []
+count = 0
 for url in url_sample.finditer(sample):
-    r = req.get(url.group(1))
-    t = r.text
-    game = game_sample.search(t).groupdict()
-    game['tags_messy'] = [tag.group(1) for tag in tag_sample.finditer(game['tags_messy'])]
-    game['description'] = game['description'].strip()
-    game['reviews_num'] = int(game['reviews_num'].replace(',',''))
-    game['reviews_perc'] = int(game['reviews_perc'])
-    game['release'] = str_to_date(game['release'])
-    print(game)
+    try:
+        r = req.get(url.group(1))
+        t = r.text
+        game = game_sample.search(t).groupdict()
+        game['tags_messy'] = [tag.group(1) for tag in tag_sample.finditer(game['tags_messy'])]
+        game['description'] = game['description'].strip()
+        game['reviews_num'] = int(game['reviews_num'].replace(',',''))
+        game['reviews_perc'] = int(game['reviews_perc'])
+        game['release'] = str_to_date(game['release'])
+        out.append(game)
+    except:
+        continue
+    if count % 50 == 0:
+        orodja.zapisi_json(out, f'podatki{count}.json')
+    print(count)
+    count += 1
+orodja.zapisi_json(out, 'podatki{count}.json')
+print(out)
+    
+        
