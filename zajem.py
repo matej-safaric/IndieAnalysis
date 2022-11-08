@@ -76,7 +76,7 @@ for url in url_sample.finditer(sample):
         orodja.zapisi_json(out, f'podatki{count}.json')
     print(count)
     count += 1
-orodja.zapisi_json(out, 'podatki{count}.json')
+orodja.zapisi_json(out, f'podatki{count}.json')
 print(out)
     
         
