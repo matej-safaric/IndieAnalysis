@@ -8,6 +8,8 @@ driver = webdriver.Firefox()
 driver.get("https://store.steampowered.com/search?category1=998")
 
 def skrol(browser: webdriver.Firefox, kolikokrat: int):
+    '''Ker se stran, ki jo obdelujem sproti nalaga, ko uporabnik drsi po strani,
+    je potrebno za zajem podatkov najprej priti do dna strani, zato obstaja ta funkcija'''
     body = browser.find_element(By.TAG_NAME, "body")
     for i in range(kolikokrat):
         body.send_keys(Keys.PAGE_DOWN)

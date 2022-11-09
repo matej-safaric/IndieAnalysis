@@ -29,6 +29,7 @@ with open('html.txt', encoding='UTF-8') as d:
 
 
 def str_to_date(str: str):
+    '''Sprejme niz oblike "DD MMM, YYYY" (npr. "11 Sep, 2001") in vrne zapis oblike "DD.MM.YYYY"'''
     months = {
         'jan': '1',
         'feb': '2',
@@ -50,8 +51,8 @@ def str_to_date(str: str):
 
 def parse_html_to_json(data: str):
     out = []
-    count = 0
-    for url in url_sample.finditer(data):
+    count = 0 # Ta spremenljivka je tu le zaradi lazjega sledenja programu med obratovanjem
+    for url in url_sample.finditer(data): # Sprehodi se po vseh igrah na strani in gre za vsako igro na njeno dedicated spletno stran, kjer pobere podatke
         try:
             r = req.get(url.group(1))
             t = r.text
@@ -66,11 +67,11 @@ def parse_html_to_json(data: str):
             print(f'{count}: Error! url:{url.group(1)}')
             continue
         if count % 200 == 0:
-            orodja.zapisi_json(out, f'podatki{count}.json')
+            orodja.zapisi_json(out, f'podatki{count}.json') # Na vsakih 200 iger shrani rezultat v nov json (za vsak slucaj)
         print(count)
         count += 1
     orodja.zapisi_json(out, f'podatki{count}.json')
-    print(datetime.datetime.now())       
+    print(datetime.datetime.now())       # Da vem ob kateri uri je program koncal in koliko casa je potreboval
 
 def json_to_csv(json_file: str, csv_file: str):
     with open(json_file, encoding='UTF-8') as d:
