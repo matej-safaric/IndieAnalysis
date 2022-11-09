@@ -2,7 +2,7 @@ import orodja
 import re
 # temp
 import requests as req
-import json
+import datetime
 
 url_sample = re.compile(
     r'<a href="(https:\/\/store\.steampowered\.com\/app\/.*?\/)\?snr=1_7_7',
@@ -28,11 +28,11 @@ with open('html.txt', encoding='UTF-8') as d:
     data = d.read()
 
 # Temp sample code
-with open('sample_html.txt', encoding='UTF-8') as d:
-    sample = d.read()
+#with open('sample_html.txt', encoding='UTF-8') as d:
+#    sample = d.read()
 
-with open('sample_gamesite_html.txt', encoding='UTF-8') as d:
-    sample_game = d.read()
+#with open('sample_gamesite_html.txt', encoding='UTF-8') as d:
+#    sample_game = d.read()
 
 def gamesite_parse(html_code):
     pass
@@ -59,7 +59,7 @@ def str_to_date(str: str):
 
 out = []
 count = 0
-for url in url_sample.finditer(sample):
+for url in url_sample.finditer(data):
     try:
         r = req.get(url.group(1))
         t = r.text
@@ -71,12 +71,12 @@ for url in url_sample.finditer(sample):
         game['release'] = str_to_date(game['release'])
         out.append(game)
     except:
+        print(f'{count}: Error! url:{url.group(1)}')
         continue
-    if count % 50 == 0:
+    if count % 200 == 0:
         orodja.zapisi_json(out, f'podatki{count}.json')
     print(count)
     count += 1
 orodja.zapisi_json(out, f'podatki{count}.json')
-print(out)
-    
+print(datetime.datetime.now())
         
