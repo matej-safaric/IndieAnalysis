@@ -1,8 +1,8 @@
 import orodja
 import re
-# temp
 import requests as req
 import datetime
+import json
 
 url_sample = re.compile(
     r'<a href="(https:\/\/store\.steampowered\.com\/app\/.*?\/)\?snr=1_7_7',
@@ -27,15 +27,6 @@ tag_sample = re.compile(
 with open('html.txt', encoding='UTF-8') as d:
     data = d.read()
 
-# Temp sample code
-#with open('sample_html.txt', encoding='UTF-8') as d:
-#    sample = d.read()
-
-#with open('sample_gamesite_html.txt', encoding='UTF-8') as d:
-#    sample_game = d.read()
-
-def gamesite_parse(html_code):
-    pass
 
 def str_to_date(str: str):
     months = {
@@ -57,26 +48,34 @@ def str_to_date(str: str):
     list[1] = months[m]
     return '.'.join(list)
 
-out = []
-count = 0
-for url in url_sample.finditer(data):
-    try:
-        r = req.get(url.group(1))
-        t = r.text
-        game = game_sample.search(t).groupdict()
-        game['tags_messy'] = [tag.group(1) for tag in tag_sample.finditer(game['tags_messy'])]
-        game['description'] = game['description'].strip()
-        game['reviews_num'] = int(game['reviews_num'].replace(',',''))
-        game['reviews_perc'] = int(game['reviews_perc'])
-        game['release'] = str_to_date(game['release'])
-        out.append(game)
-    except:
-        print(f'{count}: Error! url:{url.group(1)}')
-        continue
-    if count % 200 == 0:
-        orodja.zapisi_json(out, f'podatki{count}.json')
-    print(count)
-    count += 1
-orodja.zapisi_json(out, f'podatki{count}.json')
-print(datetime.datetime.now())
-        
+def parse_html_to_json(data: str):
+    out = []
+    count = 0
+    for url in url_sample.finditer(data):
+        try:
+            r = req.get(url.group(1))
+            t = r.text
+            game = game_sample.search(t).groupdict()
+            game['tags_messy'] = [tag.group(1) for tag in tag_sample.finditer(game['tags_messy'])]
+            game['description'] = game['description'].strip()
+            game['reviews_num'] = int(game['reviews_num'].replace(',',''))
+            game['reviews_perc'] = int(game['reviews_perc'])
+            game['release'] = str_to_date(game['release'])
+            out.append(game)
+        except:
+            print(f'{count}: Error! url:{url.group(1)}')
+            continue
+        if count % 200 == 0:
+            orodja.zapisi_json(out, f'podatki{count}.json')
+        print(count)
+        count += 1
+    orodja.zapisi_json(out, f'podatki{count}.json')
+    print(datetime.datetime.now())       
+
+def json_to_csv(json_file: str, csv_file: str):
+    with open(json_file, encoding='UTF-8') as d:
+        data = json.load(d)
+    orodja.zapisi_csv(data, ['title', 'description', 'reviews_num', 'reviews_perc', 'release', 'tags_messy'], csv_file)
+ 
+parse_html_to_json(data=data)
+json_to_csv('podatki25455.json', 'vsc_csv.csv')
