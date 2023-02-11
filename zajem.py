@@ -86,6 +86,11 @@ def json_to_csv(json_file: str, csv_file: str):
 
 #=============================================================================================================================#
 # Naknadni popravki
+
+def open_json(json_file: str):
+    with open(json_file, encoding='UTF-8') as d:
+        return json.load(d)
+
 def price_to_float(price: str) -> float:
     try:
         lst = price.split(',')
@@ -103,16 +108,60 @@ def price_to_float(price: str) -> float:
 
 def json_price_edit(json_file: str, koncna_datoteka: str):
     '''Ob zajemu podatkov je cena ostala tipa string, zato se ta funkcija sprehodi po json file-u in to popravi'''
-    with open(json_file, encoding='UTF-8') as d:
-        data_2 = json.load(d)
-    for elt in data_2:
+    dataTemp = open_json(json_file)
+    for elt in dataTemp:
         elt['price'] = price_to_float(elt['price'])
         # Eden od price1 in price2 bo None zato je to treba upostevati 
         elt['price1'] = elt['price1'].strip() if elt['price1'] is not None else elt['price1']
         elt['price2'] = elt['price2'].strip() if elt['price2'] is not None else elt['price2']
-    orodja.zapisi_json(data_2, koncna_datoteka)
-#==============================================================================================================================#
+    orodja.zapisi_json(dataTemp, koncna_datoteka)
+#=============================================================================================================================#
 
 #parse_html_to_json(data=data)
 json_price_edit('podatki24074.json', 'koncni_podatki.json')
 json_to_csv('koncni_podatki.json', 'vsc_csv2.csv')
+
+#=============================================================================================================================#
+# Radi bi razdelili en csv file na vec file-ov, namrec znacke posamezne igre ne morejo ostati v seznamu
+# Najprej dolocimo ID vsaki igri, ki bo kar zaporedno stevilo v seznamu 
+
+def add_id(json_file: str, out_ime: str):
+    '''Funkcija vzame json datoteko in doda ID vrednost vsakemu elementu v datoteki vsebovanega seznama'''
+    with open(json_file, encoding='UTF-8') as d:
+        dataTemp = json.load(d)
+    for (i, elt) in enumerate(dataTemp):
+        elt['id'] = i
+    orodja.zapisi_json(dataTemp, out_ime)
+
+#=============================================================================================================================#
+
+#=============================================================================================================================#
+
+def split(json_file: str, out1_ime: str, out2_ime: str):
+    '''Funkcija se sprehodi po seznamu v json file-u in ustvari dve novi json datoteki:
+        - Prva vsebuje enako kot prej, le znacke so izbrisane ter kljuca price1 in price2
+        - Druga vsebuje le ID vrednosti iger ter njihove znacke'''
+    dataTemp = open_json(json_file)
+    out1 = []
+    out2 = []
+    for elt in dataTemp:
+        for t in elt['tags_messy']:
+            dictTemp = {
+                'id' : elt['id'],
+                'tag' : t
+            }
+            out2.append(dictTemp)
+        _ = elt.pop('tags_messy')
+        _ = elt.pop('price1')
+        _ = elt.pop('price2')
+        out1.append(elt)
+    orodja.zapisi_json(out1, out1_ime)
+    orodja.zapisi_json(out2, out2_ime)
+
+ #=============================================================================================================================#
+   
+        
+
+
+
+#=============================================================================================================================#
