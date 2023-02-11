@@ -82,8 +82,6 @@ def json_to_csv(json_file: str, csv_file: str):
         data = json.load(d)
     orodja.zapisi_csv(data, ['title', 'description', 'reviews_num', 'reviews_perc', 'release', 'tags_messy'], csv_file)
  
-#parse_html_to_json(data=data)
-#json_to_csv('podatki25455.json', 'vsc_csv2.csv')
 
 
 #=============================================================================================================================#
@@ -101,11 +99,15 @@ def price_to_float(price: str) -> float:
         return 0.0
 
 
-def json_price_edit(json_file: str):
+def json_price_edit(json_file: str, koncna_datoteka: str):
     '''Ob zajemu podatkov je cena ostala tipa string, zato se ta funkcija sprehodi po json file-u in to popravi'''
     with open(json_file, encoding='UTF-8') as d:
-        data = json.load(d)
-    for elt in data:
-        #elt['price'] = pass
-        pass
+        data_2 = json.load(d)
+    for elt in data_2:
+        elt['price'] = price_to_float(elt['price'])
+    orodja.zapisi_json(data_2, koncna_datoteka)
+#==============================================================================================================================#
 
+#parse_html_to_json(data=data)
+json_price_edit('podatki24074.json', 'koncni_podatki.json')
+json_to_csv('koncni_podatki.json', 'vsc_csv2.csv')
