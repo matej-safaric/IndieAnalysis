@@ -4,6 +4,9 @@ import requests as req
 import datetime
 import json
 
+
+
+#=============================================================================================================================#
 url_sample = re.compile(
     r'<a href="(https:\/\/store\.steampowered\.com\/app\/.*?\/)\?snr=1_7_7',
     flags=re.DOTALL
@@ -23,7 +26,10 @@ tag_sample = re.compile(
     r'<a href="https:\/\/store\.steampowered\.com\/tags\/.*?class="app_tag" style=".*?">\s*?([\w-]+?)\s*?<\/a>',
     flags=re.DOTALL
 )
+#=============================================================================================================================#
 
+
+#=============================================================================================================================#
 with open('html.txt', encoding='UTF-8') as d:
     data = d.read()
 
@@ -77,12 +83,16 @@ def parse_html_to_json(data: str):
     orodja.zapisi_json(out, f'podatki{count}.json')
     print(datetime.datetime.now())       # Da vem ob kateri uri je program koncal in koliko casa je potreboval
 
-def json_to_csv(json_file: str, csv_file: str):
+def json_to_csv(json_file: str, csv_file: str, tag_list: list):
     with open(json_file, encoding='UTF-8') as d:
         data = json.load(d)
-    orodja.zapisi_csv(data, ['title', 'description', 'reviews_num', 'reviews_perc', 'release', 'tags_messy', 'price', 'price1', 'price2'], csv_file)
- 
+    orodja.zapisi_csv(data, tag_list, csv_file)
 
+# Seznam vseh atributov po prvotnem parsanju: 
+# ['title', 'description', 'reviews_num', 'reviews_perc', 'release', 'tags_messy', 'price', 'price1', 'price2']
+#=============================================================================================================================#
+
+parse_html_to_json(data=data)
 
 #=============================================================================================================================#
 # Naknadni popravki
@@ -117,9 +127,7 @@ def json_price_edit(json_file: str, koncna_datoteka: str):
     orodja.zapisi_json(dataTemp, koncna_datoteka)
 #=============================================================================================================================#
 
-#parse_html_to_json(data=data)
-json_price_edit('podatki24074.json', 'koncni_podatki.json')
-json_to_csv('koncni_podatki.json', 'vsc_csv2.csv')
+json_price_edit('podatki24074.json', 'podatki_price_edit.json')
 
 #=============================================================================================================================#
 # Radi bi razdelili en csv file na vec file-ov, namrec znacke posamezne igre ne morejo ostati v seznamu
@@ -134,6 +142,8 @@ def add_id(json_file: str, out_ime: str):
     orodja.zapisi_json(dataTemp, out_ime)
 
 #=============================================================================================================================#
+
+add_id('podatki_price_edit.json', 'podatki_added_id.json')
 
 #=============================================================================================================================#
 
@@ -159,9 +169,8 @@ def split(json_file: str, out1_ime: str, out2_ime: str):
     orodja.zapisi_json(out2, out2_ime)
 
  #=============================================================================================================================#
-   
+
+split('podatki_added_id.json', 'igre.json', 'znacke.json')   
+json_to_csv('igre.json', 'igre.csv', ['id', 'title', 'description', 'reviews_num', 'reviews_perc', 'release', 'price'])
+json_to_csv('znacke.json', 'znacke.csv', ['id', 'tag'])
         
-
-
-
-#=============================================================================================================================#
