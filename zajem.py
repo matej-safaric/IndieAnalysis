@@ -62,9 +62,9 @@ def parse_html_to_json(data: str):
             game['reviews_num'] = int(game['reviews_num'].replace(',',''))
             game['reviews_perc'] = int(game['reviews_perc'])
             game['release'] = str_to_date(game['release'])
-            if game['price1'] != []:
+            try:
                 game['price'] = game['price1'].strip()
-            else:
+            except:
                 game['price'] = game['price2'].strip()
             out.append(game)
         except:
