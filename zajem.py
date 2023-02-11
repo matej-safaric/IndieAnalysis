@@ -141,6 +141,16 @@ def add_id(json_file: str, out_ime: str):
         elt['id'] = i
     orodja.zapisi_json(dataTemp, out_ime)
 
+def date_to_year(json_file: str, out_ime: str):
+    '''Funkcija zamenja atribut "release" za atribut "year" tako, da vzame datum oblike DD.MM.YYYY in izlušči leto'''
+    dataTemp = open_json(json_file)
+    for elt in dataTemp:
+        date = elt['release']
+        year = date.split('.')[2]
+        elt['year'] = year
+        _ = elt.pop('release')
+    orodja.zapisi_json(dataTemp, out_ime)
+
 #=============================================================================================================================#
 
 add_id('podatki_price_edit.json', 'podatki_added_id.json')
