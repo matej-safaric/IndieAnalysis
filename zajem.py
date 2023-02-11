@@ -80,7 +80,7 @@ def parse_html_to_json(data: str):
 def json_to_csv(json_file: str, csv_file: str):
     with open(json_file, encoding='UTF-8') as d:
         data = json.load(d)
-    orodja.zapisi_csv(data, ['title', 'description', 'reviews_num', 'reviews_perc', 'release', 'tags_messy'], csv_file)
+    orodja.zapisi_csv(data, ['title', 'description', 'reviews_num', 'reviews_perc', 'release', 'tags_messy', 'price', 'price1', 'price2'], csv_file)
  
 
 
@@ -89,10 +89,12 @@ def json_to_csv(json_file: str, csv_file: str):
 def price_to_float(price: str) -> float:
     try:
         lst = price.split(',')
-        if lst[1] == '--':
+        if '--' in lst[1]:
             # Na tej spletni strani so cene ponekod zapisane kot npr. 3,-- namesto 3,00
             lst[1] = '0'
             print(lst)
+        else:
+            lst[1] = lst[1][:-1]
         out = float('.'.join(lst))
         return out
     except:
@@ -105,6 +107,8 @@ def json_price_edit(json_file: str, koncna_datoteka: str):
         data_2 = json.load(d)
     for elt in data_2:
         elt['price'] = price_to_float(elt['price'])
+        elt['price1'] = elt['price1'].strip()
+        elt['price2'] = elt['price2'].strip()
     orodja.zapisi_json(data_2, koncna_datoteka)
 #==============================================================================================================================#
 
