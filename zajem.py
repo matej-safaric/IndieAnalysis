@@ -107,7 +107,6 @@ def price_to_float(price: str) -> float:
         if '--' in lst[1]:
             # Na tej spletni strani so cene ponekod zapisane kot npr. 3,-- namesto 3,00
             lst[1] = '0'
-            print(lst)
         else:
             lst[1] = lst[1][:-1]
         out = float('.'.join(lst))
@@ -159,7 +158,7 @@ def edit_1st(json_file: str, out_ime: str):
         #Vzeto od funkcije date_to_year
         date = elt['release']
         year = date.split('.')[2]
-        elt['year'] = year
+        elt['year'] = int(year)
         _ = elt.pop('release')
     orodja.zapisi_json(dataTemp, out_ime)
 
