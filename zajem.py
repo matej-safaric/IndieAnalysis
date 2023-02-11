@@ -107,8 +107,9 @@ def json_price_edit(json_file: str, koncna_datoteka: str):
         data_2 = json.load(d)
     for elt in data_2:
         elt['price'] = price_to_float(elt['price'])
-        elt['price1'] = elt['price1'].strip()
-        elt['price2'] = elt['price2'].strip()
+        # Eden od price1 in price2 bo None zato je to treba upostevati 
+        elt['price1'] = elt['price1'].strip() if elt['price1'] is not None else elt['price1']
+        elt['price2'] = elt['price2'].strip() if elt['price2'] is not None else elt['price2']
     orodja.zapisi_json(data_2, koncna_datoteka)
 #==============================================================================================================================#
 
