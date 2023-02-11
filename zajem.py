@@ -135,8 +135,7 @@ json_price_edit('podatki24074.json', 'podatki_price_edit.json')
 
 def add_id(json_file: str, out_ime: str):
     '''Funkcija vzame json datoteko in doda ID vrednost vsakemu elementu v datoteki vsebovanega seznama'''
-    with open(json_file, encoding='UTF-8') as d:
-        dataTemp = json.load(d)
+    dataTemp = open_json(json_file)
     for (i, elt) in enumerate(dataTemp):
         elt['id'] = i
     orodja.zapisi_json(dataTemp, out_ime)
@@ -151,9 +150,22 @@ def date_to_year(json_file: str, out_ime: str):
         _ = elt.pop('release')
     orodja.zapisi_json(dataTemp, out_ime)
 
+def edit_1st(json_file: str, out_ime: str):
+    '''Funkcija je združitev zgornjih dveh, da se program ne sprehaja prevečkrat po json file-u'''
+    dataTemp = open_json(json_file)
+    for (i, elt) in enumerate(dataTemp):
+        # Vzeto od funkcije add_id
+        elt['id'] = i
+        #Vzeto od funkcije date_to_year
+        date = elt['release']
+        year = date.split('.')[2]
+        elt['year'] = year
+        _ = elt.pop('release')
+    orodja.zapisi_json(dataTemp, out_ime)
+
 #=============================================================================================================================#
 
-add_id('podatki_price_edit.json', 'podatki_added_id.json')
+edit_1st('podatki_price_edit.json', 'podatki_edit_1st.json')
 
 #=============================================================================================================================#
 
@@ -180,7 +192,7 @@ def split(json_file: str, out1_ime: str, out2_ime: str):
 
  #=============================================================================================================================#
 
-split('podatki_added_id.json', 'igre.json', 'znacke.json')   
+split('podatki_edit_1st.json', 'igre.json', 'znacke.json')   
 json_to_csv('igre.json', 'igre.csv', ['id', 'title', 'description', 'reviews_num', 'reviews_perc', 'release', 'price'])
 json_to_csv('znacke.json', 'znacke.csv', ['id', 'tag'])
         
