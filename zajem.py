@@ -14,8 +14,8 @@ game_sample = re.compile(
     r'<div class="game_description_snippet">(?P<description>.*?)<\/div>.*?' # Description
     r'<div class="subtitle column all">All Reviews:<\/div>.*?<div class="summary column">.*?\((?P<reviews_num>[0-9,]+)\).*?<\/span>.*?(?P<reviews_perc>\d+)%.*?' # Reviews
     r'<div class="date">(?P<release>[a-zA-Z0-9 ,]+?)<\/div>.*?' # Release date
-    r'<div data-panel="{&quot;flow-children&quot;:&quot;row&quot;}" class="glance_tags popular_tags" data-appid="\d+">(?P<tags_messy>.*?)onclick="ShowAppTagModal\( \d+? \)">', # Tags
-    #r'<div class="game_purchase_price price">(?P<price>.*?)<\/div>',
+    r'<div data-panel="{&quot;flow-children&quot;:&quot;row&quot;}" class="glance_tags popular_tags" data-appid="\d+">(?P<tags_messy>.*?)onclick="ShowAppTagModal\( \d+? \)">.*?' # Tags
+    r'(?:<div class="game_purchase_price price".*?>(?P<price1>.*?)<\/div>|<div class="discount_original_price">(?P<price2>.*?)</div>)',
     flags=re.DOTALL
 )
 
@@ -62,6 +62,10 @@ def parse_html_to_json(data: str):
             game['reviews_num'] = int(game['reviews_num'].replace(',',''))
             game['reviews_perc'] = int(game['reviews_perc'])
             game['release'] = str_to_date(game['release'])
+            if game['price1'] != []:
+                game['price'] = game['price1'].strip()
+            else:
+                game['price'] = game['price2'].strip()
             out.append(game)
         except:
             print(f'{count}: Error! url:{url.group(1)}')
