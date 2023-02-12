@@ -92,7 +92,7 @@ def json_to_csv(json_file: str, csv_file: str, tag_list: list):
 # ['title', 'description', 'reviews_num', 'reviews_perc', 'release', 'tags_messy', 'price', 'price1', 'price2']
 #=============================================================================================================================#
 
-parse_html_to_json(data=data)
+#parse_html_to_json(data=data)
 
 #=============================================================================================================================#
 # Naknadni popravki
@@ -126,7 +126,7 @@ def json_price_edit(json_file: str, koncna_datoteka: str):
     orodja.zapisi_json(dataTemp, koncna_datoteka)
 #=============================================================================================================================#
 
-json_price_edit('podatki24074.json', 'podatki_price_edit.json')
+json_price_edit('podatki25301.json', 'podatki_price_edit.json')
 
 #=============================================================================================================================#
 # Radi bi razdelili en csv file na vec file-ov, namrec znacke posamezne igre ne morejo ostati v seznamu
@@ -192,6 +192,6 @@ def split(json_file: str, out1_ime: str, out2_ime: str):
  #=============================================================================================================================#
 
 split('podatki_edit_1st.json', 'igre.json', 'znacke.json')   
-json_to_csv('igre.json', 'igre.csv', ['id', 'title', 'description', 'reviews_num', 'reviews_perc', 'release', 'price'])
+json_to_csv('igre.json', 'igre.csv', ['id', 'title', 'description', 'reviews_num', 'reviews_perc', 'year', 'price'])
 json_to_csv('znacke.json', 'znacke.csv', ['id', 'tag'])
         
