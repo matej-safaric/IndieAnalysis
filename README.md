@@ -4,13 +4,19 @@ V okviru tega projekta nameravam zajeti podatke o najbolj prodajanih video igrah
 
 ### Podatki, ki jih potrebujem za posamezno igro:
 - Naslov in opis
-- Leto izdaje
-- Ocena igre
-- Žanr in značke posamezne igre
+- Datum izdaje
+- Ocena igre izražena s številom ocen in deležem pozitivnih ocen
+- Žanr oz. značke posamezne igre
 
-### Hipoteze (WIP):
-- Raziskal bom kako se spreminja popularnost posameznega žanra s časom
-- Preveril bom ali obstaja povezava med velikostjo podjetja, ki je proizvedlo izdelek, in kvaliteto izdelka
-- Zanima me tudi, kako se s časom spreminja standardna cena izdelkov
+### Hipoteze:
+- S časom se popularnost posameznih žanrov iger spreminja, v vsakem letu lahko določimo najbolj popularne 
+- S časom povprečna cena izdelka narašča
+- S časom je proporcionalno vedno več brezplačnih iger v primerjavi s številom vseh iger na trgu
+- Veliko večino vseh izdelkov na Steam-u predstavljajo video igre, cenejše od 10€
+- Kvaliteta izdelka ter število igralcev sta neposredno povezana s ceno izdelka
 
-Csv datoteka vsebuje zgoraj omenjene podatke o posamezni igri
+V datoteki igre.csv se nahajajo podatki: Naslov, Opis, podatki o ocenah, ID posamezne igre
+V datoteki znacke.csv se nahajajo: ID posamezne igre, znacke
+
+kraja_html.py vsebuje kodo za jemanje .html kode s spletne strani
+zajem.py vsebuje kodo za parsanje kode iz html.txt
